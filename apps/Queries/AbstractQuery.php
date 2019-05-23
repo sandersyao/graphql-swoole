@@ -44,7 +44,7 @@ abstract class AbstractQuery
      */
     public function getOptions(): array
     {
-        if (!empty($this->options)) {
+        if (empty($this->options)) {
 
             $this->options  = [
                 'name'          => $this->name(),
