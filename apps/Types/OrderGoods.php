@@ -2,14 +2,12 @@
 namespace App\Types;
 
 use GraphQL\Type\Definition\Type;
-use App\Queries\OrderGoods;
 
 /**
  * Test
  */
-class Order extends AbstractType
+class OrderGoods extends AbstractType
 {
-
     public function fields()
     {
         return [
@@ -22,10 +20,17 @@ class Order extends AbstractType
                 'type'  => Type::string(),
             ],
             [
-                'name'  => 'orderStatus',
+                'name'  => 'name',
                 'type'  => Type::string(),
             ],
-            OrderGoods::fetchOptions(),
+            [
+                'name'  => 'quantity',
+                'type'  => Type::float(),
+            ],
+            [
+                'name'  => 'unit',
+                'type'  => Type::string(),
+            ],
         ];
     }
 }
