@@ -4,7 +4,6 @@ namespace App;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use App\Traits\Singleton;
-use App\Builders\ObjectTypeBuilder;
 use App\Types\Query;
 
 class App
@@ -12,36 +11,56 @@ class App
     use Singleton;
 
     /**
-     * Schema实例
+     * 路由表
      */
-    protected   $_schema;
+    protected   $_routes;
 
     /**
-     * 加载Schema实例
-     * 实际场景中是否会根据当前用户的授权加载不同的Schema 还没想好这样做可能会破坏单一图原则
-     *
-     * @return App
+     * 加载路由
      */
-    public function loadTypes ()
+    public function loadRouts ()
     {
-        $this->_schema = new Schema([
-            'query' => Query::getObject(),
-        ]);
+        $this->_routes = require_once dirname(__DIR__) . '/config/routes.php';
 
         return  $this;
     }
 
     /**
-     * 执行
+     * 匹配路由
      *
-     * @param string
-     * @param mixed
-     * @return mixed
+     * @param array $server
      */
-    public function run (string $query, $variableValues = null) {
+    public function matchRoute (array $server): array
+    {
+        $pattern    = $server['request_method'] . ' ' . rtrim($server['path_info'], '/');
 
-        $rootValue  = [];
+        if (isset($this->_routes[$pattern])) {
 
-        return  GraphQL::executeQuery($this->_schema, $query, $rootValue, null, $variableValues);
+            return  $this->resovleRoute($this->_routes[$pattern]);
+        } 
+
+        $pattern    = $server['request_method'] . ' ' . rtrim($server['request_uri'], '/');
+
+        if (isset($this->_routes[$pattern])) {
+
+            return  $this->resovleRoute($this->_routes[$pattern]);
+        }
+
+        return  $this->resovleRoute('StaticController@read');
+    }
+
+    /**
+     * 解析路由
+     *
+     * @param string $routeValue
+     */
+    public function resovleRoute(string $routeValue)
+    {
+        [$controller, $action]  = explode('@', $routeValue);
+
+        return [
+            'controller'    => 'App\\Controllers\\' . $controller,
+            'action'        => $action,
+        ];
     }
 }

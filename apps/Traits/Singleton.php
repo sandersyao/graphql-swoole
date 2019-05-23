@@ -16,7 +16,6 @@ trait Singleton
     public static function getInstance()
     {
         static $mapInstance = [];
-
         $className  = get_called_class();
 
         return  self::lock(function () use (& $mapInstance, $className) {
@@ -44,7 +43,7 @@ trait Singleton
         try {
 
             $result = $func();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
             $lock->unlock();
             throw $e;
