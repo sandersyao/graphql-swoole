@@ -4,10 +4,25 @@ namespace App\Controllers;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use App\Types\Query;
+use Swoole\Http\Response;
+use Swoole\Http\Request;
 
 class GraphQLController extends AbstractController
 {
-    public function exec ($request, $response)
+    /**
+     * 获取状态
+     */
+    public function status (Response $response)
+    {
+        $response->header('Content-Type', 'text/html; charset=UTF-8');
+
+        return $response->end('<h1>GraphQL Server is running</h1>');
+    }
+
+    /**
+     * GraphQL服务
+     */
+    public function exec (Response $response, Request $request)
     {
         $schema     = new Schema([
             'query' => Query::getObject(),
@@ -30,6 +45,7 @@ class GraphQLController extends AbstractController
         }
 
         $response->header('Content-Type', 'application/json');
-        $response->end(json_encode($output));
+
+        return  $response->end(json_encode($output));
     }
 }

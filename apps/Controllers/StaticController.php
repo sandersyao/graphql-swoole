@@ -1,9 +1,15 @@
 <?php
 namespace App\Controllers;
 
+use Swoole\Http\Response;
+use Swoole\Http\Request;
+
 class StaticController extends AbstractController
 {
-    public function read ($request, $response)
+    /**
+     * 静态资源访问
+     */
+    public function read (Response $response, Request $request)
     {
         $baseDir    = dirname(__DIR__) . '/../public';
         $filePath   = $baseDir . '/' . str_replace('..', '', $request->server['request_uri']);

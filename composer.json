@@ -10,7 +10,8 @@
     "require": {
         "php": ">7.1",
         "ext-swoole": ">4.0",
-        "webonyx/graphql-php": "^0.13.4"
+        "webonyx/graphql-php": "^0.13.4",
+        "swlib/saber": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",

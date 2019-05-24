@@ -5,6 +5,8 @@ use GraphQL\Type\Definition\Type;
 use App\Types\OrderGoods as OrderGoodsType;
 use GraphQL\Deferred;
 use GraphQL\Type\Definition\ResolveInfo;
+use App\Utils\Buffer;
+use App\App;
 
 /**
  * Test
@@ -19,29 +21,27 @@ class OrderGoods extends AbstractQuery
     public function resovle(): \Closure
     {
         return function ($current, $args, $context, ResolveInfo $info) {
-
             //do something buffer
+            Buffer::getInstance()->add('listGoodsByOrderId', $current['id']);
 
             return new Deferred(function () use ($current) {
-
                 //load dataset by root values that in buffer
+                $listOrderGoods = Buffer::getInstance()->exec('listGoodsByOrderId', function ($listOrderId) {
+                    $saber      = App::getInstance()->getSaber('http://127.0.0.1:8080');
+                    $apiData    = $saber->post('/sim/orderGoods', [
+                        'orderId' => $listOrderId
+                    ])->getParsedJsonArray();
+                    //通过以下备注释的代码观察接口调用次数
+                    //var_dump($apiData);
+                    return  $apiData['data']['list'];
+
+                });
+
                 //return data from dataset by copied root value 
-                return [
-                    [
-                        'id'        => '123',
-                        'sn'        => 'abc123',
-                        'name'      => '2B铅笔',
-                        'quantity'  => 4.0,
-                        'unit'      => '件',
-                    ],
-                    [
-                        'id'        => '124',
-                        'sn'        => 'abc124',
-                        'name'      => '花牛苹果',
-                        'quantity'  => 0.125,
-                        'unit'      => '公斤',
-                    ],
-                ];
+                return array_values(array_filter($listOrderGoods, function ($orderGoods) use ($current) {
+
+                    return $current['id'] == $orderGoods['orderId'];
+                }));
             });
         };
     }

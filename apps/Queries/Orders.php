@@ -5,6 +5,7 @@ use GraphQL\Type\Definition\Type;
 use App\Types\Order;
 use GraphQL\Deferred;
 use GraphQL\Type\Definition\ResolveInfo;
+use App\App;
 
 /**
  * Test
@@ -31,25 +32,10 @@ class Orders extends AbstractQuery
     {
         return function ($current, $args, $context, ResolveInfo $info) {
 
-            //do something buffer
+            $saber      = App::getInstance()->getSaber('http://127.0.0.1:8080');
+            $apiData    = $saber->post('/sim/orders', $args)->getParsedJsonArray();
 
-            return new Deferred(function () use ($current) {
-
-                //load dataset by root values that in buffer
-                //return data from dataset by copied root value 
-                return [
-                    [
-                        'id'            => '123',
-                        'sn'            => 'abc123',
-                        'orderStatus'   => 'paid',
-                    ],
-                    [
-                        'id'            => '124',
-                        'sn'            => 'abc124',
-                        'orderStatus'   => 'paid',
-                    ],
-                ];
-            });
+            return  $apiData['data']['list'];
         };
     }
 }

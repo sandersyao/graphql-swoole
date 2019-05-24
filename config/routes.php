@@ -4,5 +4,13 @@
  * test
  */
 return [
-    'POST /graphql' => 'GraphQLController@exec',
+    //GraphQL Service
+    'POST /graphql'         => 'GraphQLController@exec',
+
+    //Service Status check
+    'GET /graphql'          => 'GraphQLController@status',
+
+    //Simulations
+    'POST /sim/orders'      => 'SimulationApiController@ordersQuery',
+    'POST /sim/orderGoods'  => 'SimulationApiController@orderGoodsQuery',
 ];

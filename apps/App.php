@@ -1,11 +1,15 @@
 <?php
 namespace App;
 
-use GraphQL\GraphQL;
-use GraphQL\Type\Schema;
 use App\Traits\Singleton;
-use App\Types\Query;
+use Swlib\Saber;
+use Swlib\Http\ContentType;
 
+/**
+ * 大杂烩
+ * 初期阶段先把有的没的放这里
+ * 以后早晚得拆迁
+ */
 class App
 {
     use Singleton;
@@ -62,5 +66,32 @@ class App
             'controller'    => 'App\\Controllers\\' . $controller,
             'action'        => $action,
         ];
+    }
+
+    /**
+     * 获取Seber客户端实例
+     *
+     * @param  string $service
+     * @return Saber
+     */
+    public function getSaber(string $service): Saber
+    {
+        static $map = [];
+
+        if (!isset($map[$service]) || !($map[$service] instanceof Saber)) {
+
+            $map[$service]  = Saber::create([
+                'base_uri'  => $service,
+                'headers'   => [
+                    'Accept-Language'   => 'en,zh-CN;q=0.9,zh;q=0.8',
+                    'Content-Type'      => ContentType::JSON,
+                    'DNT'               => '1',
+                    'User-Agent'        => null
+                ],
+                'use_pool'  => true,
+            ]);
+        }
+
+        return  $map[$service];
     }
 }
