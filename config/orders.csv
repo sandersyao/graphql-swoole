@@ -1,0 +1,6 @@
+id,sn,orderStatus
+1,abc,paid
+2,abd,paid
+3,abe,shipping
+4,abf,checked
+5,abg,canceled
