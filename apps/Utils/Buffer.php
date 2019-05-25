@@ -27,7 +27,6 @@ class Buffer
 
     public function exec (string $key, \Closure $callback)
     {
-
         if (!isset($this->result[$key])) {
 
             $this->result[$key] = $callback($this->map[$key]);
@@ -42,6 +41,7 @@ class Buffer
 
     public function cleanAll ()
     {
-        $this->map  = [];
+        $this->map      = [];
+        $this->result   = [];
     }
 }
