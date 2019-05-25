@@ -19,6 +19,7 @@ class SimulationApiController extends AbstractController
      */
     public function ordersQuery (Response $response, Request $request)
     {
+        \Swoole\Coroutine::sleep(2);
         $query      = $this->in($request);
         $listOrder  = 'All' == $query['orderStatus']
                     ? $this->searchEqu('orders')
@@ -36,6 +37,7 @@ class SimulationApiController extends AbstractController
      */
     public function orderGoodsQuery (Response $response, Request $request)
     {
+        \Swoole\Coroutine::sleep(3);
         $query          = $this->in($request);
         $listOrderGoods = is_array($query['orderId'])
                         ? $this->searchIn('ordergoods', 'orderId', $query['orderId'])
