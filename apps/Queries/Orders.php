@@ -32,10 +32,19 @@ class Orders extends AbstractQuery
     {
         return function ($current, $args, $context, ResolveInfo $info) {
 
-            $saber      = App::getInstance()->getSaber('http://127.0.0.1:8080');
-            $apiData    = $saber->post('/sim/orders', $args)->getParsedJsonArray();
+            go(function () use ($args) {
+                $saber      = App::getInstance()->getSaber('http://127.0.0.1:8080');
+                $apiData    = $saber->post('/sim/orders', $args)->getParsedJsonArray();
+                $this->channel()->push($apiData);
+            });
+            $me     = $this;
 
-            return  $apiData['data']['list'];
+            return new Deferred(function () use ($me) {
+
+                $apiData    = $me->channel()->pop();
+
+                return  $apiData['data']['list'];
+            });
         };
     }
 }

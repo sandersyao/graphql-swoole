@@ -3,6 +3,7 @@
 namespace App\Queries;
 
 use App\Traits\Singleton;
+use Swoole\Coroutine\Channel;
 
 /**
  * 抽象查询
@@ -15,7 +16,21 @@ abstract class AbstractQuery
 {
     use Singleton;
 
+    const CHANNEL_SIZE  = 100;
+
     protected $options;
+
+    protected $channel;
+
+    protected function __construct()
+    {
+        $this->channel  = new Channel(self::CHANNEL_SIZE);
+    }
+
+    protected function channel()
+    {
+        return $this->channel;
+    }
 
     /**
      * 获取类型
