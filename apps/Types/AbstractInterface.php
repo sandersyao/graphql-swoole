@@ -29,6 +29,33 @@ abstract class AbstractInterface
     abstract public function fields();
 
     /**
+     * 将自己的字段合并如目标字段
+     */
+    public static function mergeFields (array $listObject)
+    {
+        $fieldsInterface    = static::getInstance()->fields();
+        $listInterface      = is_callable($fieldsInterface)
+                            ? $fieldsInterface()
+                            : $fieldsInterface;
+
+        return array_merge($listObject, array_filter($listInterface, function ($element, $name) use ($listObject) {
+
+            foreach ($listObject as $nameObject => $itemObject) {
+
+                if (
+                    (is_string($name) && $name === $nameObject)
+                    || $itemObject['name'] === $element['name']
+                ) {
+
+                    return  false;;
+                }
+            }
+
+            return  true;
+        }, ARRAY_FILTER_USE_BOTH));
+    }
+
+    /**
      * 静态获取InterfaceType对象
      *
      * @return  InterfaceType

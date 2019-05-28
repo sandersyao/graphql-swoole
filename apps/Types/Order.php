@@ -14,20 +14,17 @@ class Order extends AbstractType
     {
         return  function () {
 
-            return array_merge(
-                NodeInterface::getInstance()->fields(),
+            return  NodeInterface::mergeFields([
                 [
-                    [
-                        'name'  => 'sn',
-                        'type'  => Type::string(),
-                    ],
-                    [
-                        'name'  => 'orderStatus',
-                        'type'  => Type::string(),
-                    ],
-                    OrderGoods::fetchOptions(),
-                ]
-            );
+                    'name'  => 'sn',
+                    'type'  => Type::string(),
+                ],
+                [
+                    'name'  => 'orderStatus',
+                    'type'  => Type::string(),
+                ],
+                OrderGoods::fetchOptions(),
+            ]);
         };
     }
 
