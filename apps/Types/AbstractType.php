@@ -2,12 +2,15 @@
 namespace App\Types;
 
 use App\Traits\Singleton;
+use App\Traits\TypeDescription;
+use App\Traits\TypeName;
+use App\Traits\HasDefaultAttribute;
 use App\Builders\ObjectTypeBuilder;
 use GraphQL\Type\Definition\ObjectType;
 
 abstract class AbstractType
 {
-    use Singleton;
+    use Singleton, HasDefaultAttribute, TypeDescription, TypeName;
 
     /**
      * ObjectType对象
@@ -53,59 +56,16 @@ abstract class AbstractType
      */
     protected function build(): ObjectType
     {
-        return  ObjectTypeBuilder::create()
+        $builder    = ObjectTypeBuilder::getInstance()
             ->name($this->name())
             ->description($this->description())
-            ->fields($this->fields())
-            ->fetch();
-    } 
+            ->fields($this->fields());
 
-    /**
-     * 获取名称
-     *
-     * @return strnig
-     */
-    public function name(): string
-    {
-        return $this->_getStringAttribute('name', function () {
+        if (is_callable([$this, 'interfaces'])) {
 
-            $className  = get_called_class();
-            $classSplit = explode('\\', $className);
-
-            return      ucfirst(array_pop($classSplit));
-        });
-    }
-
-    /**
-     * 获取描述
-     *
-     * @return strnig
-     */
-    public function description(): string
-    {
-        return $this->_getStringAttribute('description', function () {
-
-            $name       = $this->name();
-            $article    = in_array($name[0], ['A','E','I','O','U']) ? 'an' : 'a';
-
-            return      sprintf('%s %s Object', $article, $name);
-        });
-    }
-
-    /**
-     * 获取字符串值
-     *
-     * @param string
-     * @param \Closure
-     * @return string
-     */
-    protected function _getStringAttribute(string $attributeName, \Closure $default)
-    {
-        if (isset($this->$attributeName) && is_string($this->$attributeName)) {
-
-            return $this->$attributeName;
+            $builder->interfaces($this->interfaces());
         }
 
-        return $default();
-    }
+        return  $builder->build();
+    } 
 }

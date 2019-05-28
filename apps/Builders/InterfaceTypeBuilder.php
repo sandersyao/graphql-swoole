@@ -1,12 +1,12 @@
 <?php
 namespace App\Builders;
 
-use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\InterfaceType;
 
 /**
- * 对象类型构建器
+ * 
  */
-class ObjectTypeBuilder extends AbstractBuilder
+class InterfaceTypeBuilder extends AbstractBuilder
 {
     /**
      * 获取配置项列表
@@ -19,10 +19,7 @@ class ObjectTypeBuilder extends AbstractBuilder
             'fields'        => 'required|type:array,callable',
             'name'          => 'type:string',
             'description'   => 'type:string',
-            'resolve'       => 'type:callable',
-            'resolveField'  => 'type:callable',
-            'interfaces'    => 'type:array,callable',
-            'isTypeOf'      => 'type:callable'
+            'resolveType'   => 'type:callable',
         ];
     }
 
@@ -34,6 +31,6 @@ class ObjectTypeBuilder extends AbstractBuilder
      */
     public function fetch (...$args)
     {
-        return new ObjectType($this->_options);
+        return new InterfaceType($this->_options);
     }
 }
