@@ -3,6 +3,7 @@ require_once    'vendor/autoload.php';
 
 use App\App;
 use App\Utils\Buffer;
+use App\Queries\Order;
 
 //加载路由表
 $app  = App::getInstance()->loadRouts();

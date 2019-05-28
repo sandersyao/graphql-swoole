@@ -1,31 +1,24 @@
 <?php
 namespace App\Queries;
 
-use GraphQL\Type\Definition\Type;
-use App\Types\Order;
-use GraphQL\Deferred;
+use App\Traits\IsNodeQuery;
+use App\Types\Order as OrderType;
+use App\Types\NodeInterface;
 use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Deferred;
 use App\App;
+use App\Utils\Relay;
 
 /**
- * Test
+ * 
  */
-class Orders extends AbstractQuery
+class Order extends AbstractQuery
 {
-    public function args()
-    {
-        return  [
-            'orderStatus' => [
-                'type'          => Type::string(),
-                'description'   => '订单列表',
-                'defaultValue'  => 'All',
-            ],
-        ];
-    }
+    use IsNodeQuery;
 
     public function type()
     {
-        return Type::listOf(Order::getObject());
+        return  OrderType::getObject();
     }
 
     public function resolve(): \Closure
@@ -34,7 +27,7 @@ class Orders extends AbstractQuery
 
             go(function () use ($args) {
                 $saber      = App::getInstance()->getSaber('http://127.0.0.1:8080');
-                $apiData    = $saber->post('/sim/orders', $args)->getParsedJsonArray();
+                $apiData    = $saber->post('/sim/order', $args)->getParsedJsonArray();
                 $this->channel()->push($apiData);
             });
             $me     = $this;
@@ -43,7 +36,9 @@ class Orders extends AbstractQuery
 
                 $apiData    = $me->channel()->pop();
 
-                return  $apiData['data']['list'];
+                return  array_merge($apiData['data']['order'], [
+                    Relay::TYPE_FIELD   => $me->type(),
+                ]);
             });
         };
     }

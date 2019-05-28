@@ -40,17 +40,17 @@ class App
 
         if (isset($this->_routes[$pattern])) {
 
-            return  $this->resovleRoute($this->_routes[$pattern]);
+            return  $this->resolveRoute($this->_routes[$pattern]);
         } 
 
         $pattern    = $server['request_method'] . ' ' . rtrim($server['request_uri'], '/');
 
         if (isset($this->_routes[$pattern])) {
 
-            return  $this->resovleRoute($this->_routes[$pattern]);
+            return  $this->resolveRoute($this->_routes[$pattern]);
         }
 
-        return  $this->resovleRoute('StaticController@read');
+        return  $this->resolveRoute('StaticController@read');
     }
 
     /**
@@ -58,7 +58,7 @@ class App
      *
      * @param string $routeValue
      */
-    public function resovleRoute(string $routeValue)
+    public function resolveRoute(string $routeValue)
     {
         [$controller, $action]  = explode('@', $routeValue);
 

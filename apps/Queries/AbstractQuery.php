@@ -40,7 +40,7 @@ abstract class AbstractQuery
     /**
      * 获取resolve
      */
-    abstract public function resovle(): \Closure;
+    abstract public function resolve(): \Closure;
 
     /**
      * 获取配置
@@ -65,7 +65,7 @@ abstract class AbstractQuery
                 'name'          => $this->name(),
                 'description'   => $this->description(),
                 'type'          => $this->type(),
-                'resolve'       => $this->resovle(),
+                'resolve'       => $this->resolve(),
             ];
 
             if (is_callable([$this, 'args'])) {

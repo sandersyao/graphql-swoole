@@ -80,7 +80,7 @@ abstract class AbstractInterface
         return  $this->object;
     }
 
-    public function resolveType()
+    public function resolveType(): \Closure
     {
         return function () {};
     }

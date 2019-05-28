@@ -17,6 +17,21 @@ class SimulationApiController extends AbstractController
     /**
      * 订单查询
      */
+    public function orderById (Response $response, Request $request)
+    {
+        //\Swoole\Coroutine::sleep(2);
+        $query      = $this->in($request);
+        $listOrder  = $this->searchEqu('orders', 'id', $query['id']);
+        $data       = [
+            'order' => current($listOrder),
+        ];
+
+        return  $this->out($response, $data);
+    }
+
+    /**
+     * 订单查询
+     */
     public function ordersQuery (Response $response, Request $request)
     {
         //\Swoole\Coroutine::sleep(2);

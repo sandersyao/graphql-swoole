@@ -18,7 +18,7 @@ class OrderGoods extends AbstractQuery
         return Type::listOf(OrderGoodsType::getObject());
     }
 
-    public function resovle(): \Closure
+    public function resolve(): \Closure
     {
         return function ($current, $args, $context, ResolveInfo $info) {
 
