@@ -9,7 +9,6 @@ use App\Queries\OrderGoods;
  */
 class Order extends AbstractType
 {
-
     public function fields()
     {
         return  function () {

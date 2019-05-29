@@ -13,16 +13,16 @@ trait Singleton
      *
      * @return mixed
      */
-    public static function getInstance()
+    public static function getInstance(...$args)
     {
         static $mapInstance = [];
         $className  = get_called_class();
 
-        return  self::lock(function () use (& $mapInstance, $className) {
+        return  self::lock(function () use (& $mapInstance, $className, $args) {
 
             if (!isset($mapInstance[$className])) {
 
-                $mapInstance[$className]    = new $className;
+                $mapInstance[$className]    = new $className(...$args);
             }
 
             return  $mapInstance[$className];

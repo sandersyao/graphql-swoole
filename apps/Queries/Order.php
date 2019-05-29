@@ -30,14 +30,13 @@ class Order extends AbstractQuery
                 $apiData    = $saber->post('/sim/order', $args)->getParsedJsonArray();
                 $this->channel()->push($apiData);
             });
-            $me     = $this;
 
-            return new Deferred(function () use ($me) {
+            return new Deferred(function () {
 
-                $apiData    = $me->channel()->pop();
+                $apiData    = $this->channel()->pop();
 
                 return  array_merge($apiData['data']['order'], [
-                    Relay::TYPE_FIELD   => $me->type(),
+                    Relay::TYPE_FIELD   => $this->type(),
                 ]);
             });
         };
