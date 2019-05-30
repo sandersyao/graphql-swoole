@@ -15,6 +15,21 @@ class SimulationApiController extends AbstractController
     const MESSAGE_DEFAULT   = 'OK';
 
     /**
+     * 创建订单
+     */
+    public function orderCreate (Response $response, Request $request)
+    {
+        //\Swoole\Coroutine::sleep(2);
+        $query      = $this->in($request);
+        var_dump($query);
+        $listOrder  = $this->searchEqu('orders');
+        $data       = [
+            'order' => end($listOrder),
+        ];
+        return $this->out($response, $data);
+    }
+
+    /**
      * 订单查询
      */
     public function orderById (Response $response, Request $request)

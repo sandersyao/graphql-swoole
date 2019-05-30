@@ -4,6 +4,7 @@ namespace App\Controllers;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use App\Types\Query;
+use App\Types\Mutation;
 use Swoole\Http\Response;
 use Swoole\Http\Request;
 
@@ -24,17 +25,21 @@ class GraphQLController extends AbstractController
      */
     public function exec (Response $response, Request $request)
     {
-        $schema     = new Schema([
-            'query' => Query::getObject(),
+        $schema         = new Schema([
+            'query'     => Query::getObject(),
+            'mutation'  => Mutation::getObject(),
         ]);
-        $rawInput   = $request->rawContent();
-        $input      = json_decode($rawInput, true);
-        $query      = $input['query'];
+        $rawInput       = $request->rawContent();
+        $input          = json_decode($rawInput, true);
+        $operationName  = isset($input['operationName'])
+                        ? $input['operationName']
+                        : null;
+        $query          = $input['query'];
         $variableValues = isset($input['variables']) ? $input['variables'] : null;
-        $rootValue  = [];
+        $rootValue      = [];
 
         try {
-            $result     = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
+            $result     = GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues, $operationName);
             $output     = $result->toArray();
         } catch (\Exception $e) {
             $output     = [
