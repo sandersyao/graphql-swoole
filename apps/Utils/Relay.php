@@ -22,11 +22,17 @@ class Relay
 
     const CONNECTION_TYPE_NAME_SUFFIX   = 'Connection';
 
+    /**
+     * 全局唯一ID
+     */
     public static function getGlobalId(string $typeName, string $id): string
     {
         return  base64_encode(base64_encode($typeName . self::SEPARATOR_TYPE_ID . $id));
     }
 
+    /**
+     * 解析全局ID
+     */
     public static function resolveGlobalId($value, $args, $context, ResolveInfo $info)
     {
         $idInfo         = self::fromGlobalId($args[self::ID_FIELD]);
@@ -43,11 +49,17 @@ class Relay
         return  null;
     }
 
+    /**
+     * 根据Type获取Class
+     */
     public static function getClass($typeName)
     {
         return self::NAMESPACE_QUERY . '\\' . ucfirst($typeName); 
     }
 
+    /**
+     * 根据全局ID获取Type和ID
+     */
     public static function fromGlobalId(string $globalId)
     {
         list($typeName, $id) = explode(self::SEPARATOR_TYPE_ID, base64_decode(base64_decode($globalId)), 2);
@@ -58,11 +70,17 @@ class Relay
         ];
     }
 
+    /**
+     * 创建连接
+     */
     public static function createConnection($nodeObject)
     {
         return  Connection::getInstance($nodeObject)->fetch();
     }
 
+    /**
+     * 合并连接参数
+     */
     public static function mergeConnectionArgs(array $args = [])
     {
         $argsConnection = [
